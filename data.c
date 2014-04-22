@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "data.h"
+#include "controls.h"
 
 int listCreat(struct list *list, struct node *node)
 {
@@ -11,10 +12,34 @@ int listCreat(struct list *list, struct node *node)
 
 int listAdd(struct list *list, struct node *node)
 {
+	if(list->first=NULL)
+	{
+		listCreat(list,node);
+		return 1;
+	}
+
+	if(listIsOn(list,node)) { return 0; }
+
 	node->prev=list->last;
 	list->last->next=node;
 	node->next=NULL;
 }
+
+int listIsOn(struct list *list, struct node *node)
+{
+	struct node *cur = list->first;
+	while(1)
+	{
+		if(cur==node)
+		{
+			return 1;
+		}
+		if(cur->next==NULL) { break; }
+	}
+	return 0;
+}
+
+
 	
 int listRemove(struct list *list, struct node *node)
 {
@@ -22,6 +47,33 @@ int listRemove(struct list *list, struct node *node)
 	node->next->prev=node->prev;
 }
 
+int setF(struct node *node, struct thing *heebo)
+{
+	if(node->parent!=NULL)
+	{
+		node->G=node->parent->F+1;
+	}
+	node->H=abs(node->y - heebo->y)+abs(node->x - heebo->y);
+	node->F=node->G + node->H;
+}
+
+struct node* listLowest(struct list *list)
+{
+	struct node *cur = list->first;
+	struct node *low=cur;
+	while(1)
+	{
+		if(cur->F<low->F)
+		{
+			low=cur;
+		}
+		if(cur->next==NULL) { break; }
+	}
+	return low;
+}	
+
+
+/*
 struct node * listFind(struct list *list,int y, int x)
 {
 	struct node *cur = list->first;
@@ -38,4 +90,4 @@ struct node * listFind(struct list *list,int y, int x)
 	}
 	return NULL;
 }
-
+*/
