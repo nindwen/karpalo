@@ -12,13 +12,13 @@ int main()
 
 	struct thing heebo;
 	heebo.icon="@";
-	heebo.x=4;
+	heebo.x=40;
 	heebo.y=4;
 
 	struct thing vihu;
 	vihu.icon="Q";
-	vihu.x=1;
-	vihu.y=1;
+	vihu.x=20;
+	vihu.y=20;
 
 
 	struct tile kartta[100][100];

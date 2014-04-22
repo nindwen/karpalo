@@ -11,7 +11,7 @@ int levgen(int size, struct tile level[size][size])
 	{
 		for(j=0;j<100;j++)
 		{
-			if(random()%5!=1)
+			if(1) //random()%5!=1)
 			{
 				level[i][j].icon=" ";
 				level[i][j].solid=0;

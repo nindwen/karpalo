@@ -53,24 +53,25 @@ int thinkt(struct thing *t, int ls, struct tile level[ls][ls], struct thing *hee
 		{
 			for(tx=-1;tx<2;tx=tx+2)
 			{
-				if(level[ty][tx].solid==0 && !listIsOn(&closed,&nodemap[ty][tx]))
+				if(cy+ty<=0 || cx+tx <=0) break;
+				if(level[cy+ty][cx+tx].solid==0 && !listIsOn(&closed,&nodemap[cy+ty][cx+tx]))
 				{
 					if(!listIsOn(&open,current))
 						{
-							listAdd(&open, &nodemap[ty][tx]);
-							nodemap[ty][tx].parent=current;
-							nodemap[ty][tx].y=ty;
-							nodemap[ty][tx].x=tx;
+							listAdd(&open, &nodemap[cy+ty][cx+tx]);
+							nodemap[cy+ty][cx+tx].parent=current;
+							nodemap[cy+ty][cx+tx].y=cy+ty;
+							nodemap[cy+ty][cx+tx].x=cx+tx;
 
-							setF(&nodemap[ty][tx],heebo);
+							setF(&nodemap[cy+ty][cx+tx],heebo);
 							atLeatOneFound=1;
 						}
 					else
 					{
-						if(nodemap[ty][tx].G < current->G+1)
+						if(nodemap[cy+ty][cx+tx].G < current->G+1)
 						{
-							nodemap[ty][tx].parent=current;
-							setF(&nodemap[ty][tx],heebo);
+							nodemap[cy+ty][cx+tx].parent=current;
+							setF(&nodemap[cy+ty][cx+tx],heebo);
 						}
 					}
 				}
@@ -88,7 +89,15 @@ int thinkt(struct thing *t, int ls, struct tile level[ls][ls], struct thing *hee
 			break;
 		}
 	}
-	movet(t,t->y-closed.first->next->y, t->x-closed.first->next->x, ls, level);
-	
+	struct node *temp=closed.last;
+	while(1)
+	{
+		if(temp->parent->y==t->y && temp->parent->x==t->x)
+		{
+			movet(t,temp->y -t->y,temp->x - t->x ,ls, level);
+			break;
+		}
+		temp=temp->parent;
+	}
 }
 
