@@ -15,6 +15,11 @@ int main()
 	heebo.x=4;
 	heebo.y=4;
 
+	struct thing vihu;
+	vihu.icon="Q";
+	vihu.x=1;
+	vihu.y=1;
+
 
 	struct tile kartta[100][100];
 	levgen(100,kartta);
@@ -44,6 +49,7 @@ int main()
 			movet(&heebo,0,-1,100,kartta);
 		}
 
+		thinkt(&vihu,100,kartta,&heebo);
 
 
 		refresh();

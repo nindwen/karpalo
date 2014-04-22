@@ -4,47 +4,67 @@
 
 int listCreat(struct list *list, struct node *node)
 {
-	list->first=node;
-	list->last=node;
-	node->prev=NULL;
-	node->next=NULL;
+	list->first	=	node;
+	list->last	=	node;
+	node->prev	=	NULL;
+	node->next	=	NULL;
 }
 
 int listAdd(struct list *list, struct node *node)
 {
-	if(list->first=NULL)
+	if(list->first==NULL)
 	{
 		listCreat(list,node);
 		return 1;
 	}
-
-	if(listIsOn(list,node)) { return 0; }
-
-	node->prev=list->last;
-	list->last->next=node;
-	node->next=NULL;
+	else if(listIsOn(list,node)) { return 0; }
+	else
+	{
+		node->prev=list->last;
+		list->last->next=node;
+		list->last=node;
+		node->next=NULL;
+	}
 }
 
 int listIsOn(struct list *list, struct node *node)
 {
-	struct node *cur = list->first;
-	while(1)
+	if(list->first==NULL)
 	{
-		if(cur==node)
-		{
-			return 1;
-		}
-		if(cur->next==NULL) { break; }
+		return 0;
 	}
-	return 0;
+	else
+	{
+		struct node *cur = list->first;
+		while(1)
+		{
+			if(cur==node)
+			{
+				return 1;
+			}
+			if(cur->next==NULL) { return 0; }
+			cur=cur->next;
+		}
+		return 0;
+	}
 }
 
 
 	
 int listRemove(struct list *list, struct node *node)
 {
-	node->prev->next=node->next;
-	node->next->prev=node->prev;
+	if(list->first==node)
+	{
+		list->first=node->next;
+	}
+	else
+	{
+		node->prev->next=node->next;
+		if(node->next != NULL)
+		{
+			node->next->prev=node->prev;
+		}
+	}
 }
 
 int setF(struct node *node, struct thing *heebo)
@@ -68,6 +88,7 @@ struct node* listLowest(struct list *list)
 			low=cur;
 		}
 		if(cur->next==NULL) { break; }
+		cur=cur->next;
 	}
 	return low;
 }	

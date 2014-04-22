@@ -18,8 +18,10 @@ int thinkt(struct thing *t, int ls, struct tile level[ls][ls], struct thing *hee
 {
 	struct list open;
 	open.first=NULL;
+	open.last=NULL;
 	struct list closed;
 	closed.first=NULL;
+	closed.last=NULL;
 	struct node nodemap[ls][ls];
 
 	int cx,cy;
@@ -43,6 +45,9 @@ int thinkt(struct thing *t, int ls, struct tile level[ls][ls], struct thing *hee
 		
 		int ty,tx;
 		int atLeatOneFound=0;
+
+		listRemove(&open,current);
+		listAdd(&closed,current);
 
 		for(ty=-1;ty<2;ty=ty+2)
 		{
@@ -73,8 +78,6 @@ int thinkt(struct thing *t, int ls, struct tile level[ls][ls], struct thing *hee
 		}
 
 
-		listRemove(&open,current);
-		listAdd(&closed,current);
 		if(current->y==heebo->y && current->x==heebo->x)
 		{
 			break;
