@@ -24,6 +24,7 @@ int main(int argc, char **argv)
 	int lol,x,y=0;
 	noecho();
 
+
 	struct thing heebo;
 	heebo.icon="@";
 	heebo.x=random()%size;
@@ -33,6 +34,13 @@ int main(int argc, char **argv)
 	vihu.icon="Q";
 	vihu.x=random()%size;
 	vihu.y=random()%size;
+
+	clear();
+	mvprintw(0,0,"You are @.\nYou find yourself in a dark, cold dungeon.\nYou have no memory of this place.\nYou sense something evil. Run!");
+	mvprintw(heebo.y,heebo.x,"%s",heebo.icon);
+	mvprintw(vihu.y,vihu.x,"%s",vihu.icon);
+	refresh();
+	getch();
 
 	struct tile kartta[size][size];
 	levgen(size,kartta, hardness);
@@ -45,18 +53,18 @@ int main(int argc, char **argv)
 	int i,j;
 
 	int ch;
+
+
 	while((ch = getch()) != KEY_F(1))
 	 {	
-		 if(ch==KEY_F(1)) { break; }
 
-		/*
 		for(i=0;i<size;i++)
 		{
 			for(j=0;j<size;j++)
 			{
 				mvprintw(j,i,"%s",kartta[j][i].icon);
 			}
-		}*/
+		}
 
 		if(ch== KEY_DOWN)
 		{
@@ -78,10 +86,10 @@ int main(int argc, char **argv)
 			movet(&heebo,0,-1,size,kartta);
 		}
 
-		if(thinkt(&vihu,size,kartta,&heebo)==42)
+		if(thinkt(&vihu,size,kartta,&heebo)==42 || (vihu.y==heebo.y && vihu.x==heebo.x))
 		{
 			clear();
-			mvprintw(20,20,"Game over!");
+			mvprintw(0,0,"The Mysterious Q is currently consuming your soul.\nGame over.");
 			refresh();
 			getch();
 			break;

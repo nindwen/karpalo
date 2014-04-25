@@ -7,11 +7,12 @@ int movet(struct thing *t, int y, int x, int ls, struct tile level[ls][ls])
 {
 	if(!level[t->y+y][t->x+x].solid)
 	{
-		mvprintw(t->y,t->x,"%s",level[t->y][t->x].icon);
+		//mvprintw(t->y,t->x,"%s",level[t->y][t->x].icon);
 		t->y=t->y+y;
 		t->x=t->x+x;
-		mvprintw(t->y,t->x,"%s",t->icon); 
+		//mvprintw(t->y,t->x,"%s",t->icon); 
 	}
+	mvprintw(t->y,t->x,"%s",t->icon);
 }
 
 int thinkt(struct thing *t, int ls, struct tile level[ls][ls], struct thing *heebo)
