@@ -26,13 +26,13 @@ int main(int argc, char **argv)
 
 	struct thing heebo;
 	heebo.icon="@";
-	heebo.x=40;
-	heebo.y=4;
+	heebo.x=random()%size;
+	heebo.y=random()%size;
 
 	struct thing vihu;
 	vihu.icon="Q";
-	vihu.x=10;
-	vihu.y=10;
+	vihu.x=random()%size;
+	vihu.y=random()%size;
 
 	struct tile kartta[size][size];
 	levgen(size,kartta, hardness);
