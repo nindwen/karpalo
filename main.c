@@ -17,8 +17,8 @@ int main()
 
 	struct thing vihu;
 	vihu.icon="Q";
-	vihu.x=20;
-	vihu.y=20;
+	vihu.x=10;
+	vihu.y=10;
 
 
 	struct tile kartta[100][100];
@@ -27,7 +27,16 @@ int main()
 
 	int ch;
 	while((ch = getch()) != KEY_F(1))
-	{	
+	 {	
+
+		/*
+		for(i=0;i<100;i++)
+		{
+			for(j=0;j<100;j++)
+			{
+				mvprintw(j,i,"%s",kartta[j][i].icon);
+			}
+		}*/
 
 		if(ch== KEY_DOWN)
 		{

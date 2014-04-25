@@ -16,6 +16,9 @@ int movet(struct thing *t, int y, int x, int ls, struct tile level[ls][ls])
 
 int thinkt(struct thing *t, int ls, struct tile level[ls][ls], struct thing *heebo)
 {
+
+	//Add the starting square (or node) to the open list. 
+
 	struct list open;
 	open.first=NULL;
 	open.last=NULL;
@@ -39,6 +42,7 @@ int thinkt(struct thing *t, int ls, struct tile level[ls][ls], struct thing *hee
 
 	while(1)
 	{
+		//Look for the lowest F cost square on the open list
 		current=listLowest(&open);	
 		cy=current->y;
 		cx=current->x;
@@ -46,55 +50,84 @@ int thinkt(struct thing *t, int ls, struct tile level[ls][ls], struct thing *hee
 		int ty,tx;
 		int atLeatOneFound=0;
 
+		//Switch it to the closed list. 
 		listRemove(&open,current);
 		listAdd(&closed,current);
 
-		for(ty=-1;ty<2;ty=ty+2)
+		//For each of the 8 squares adjacent to this current square …
+		int i;
+		for(i=0;i<4;i++)
 		{
-			for(tx=-1;tx<2;tx=tx+2)
+			switch(i)
 			{
-				if(cy+ty<=0 || cx+tx <=0) break;
-				if(level[cy+ty][cx+tx].solid==0 && !listIsOn(&closed,&nodemap[cy+ty][cx+tx]))
-				{
-					if(!listIsOn(&open,current))
-						{
-							listAdd(&open, &nodemap[cy+ty][cx+tx]);
-							nodemap[cy+ty][cx+tx].parent=current;
-							nodemap[cy+ty][cx+tx].y=cy+ty;
-							nodemap[cy+ty][cx+tx].x=cx+tx;
-
-							setF(&nodemap[cy+ty][cx+tx],heebo);
-							atLeatOneFound=1;
-						}
-					else
+				case 0:
+					ty=-1;
+					tx=0;
+					break;
+				case 1:
+					ty=1;
+					tx=0;
+					break;
+				case 2:
+					ty=0;
+					tx=-1;
+					break;
+				case 3:
+					ty=0;
+					tx=1;
+					break;
+			}
+			if(cy+ty<=0 || cx+tx <=0) break;
+			//If it is not walkable or if it is on the closed list, ignore it  
+			if(level[cy+ty][cx+tx].solid==0 && !listIsOn(&closed,&nodemap[cy+ty][cx+tx]))
+			{
+				//If it isn’t on the open list, add it to the open list
+				if(!listIsOn(&open,current))
 					{
-						if(nodemap[cy+ty][cx+tx].G < current->G+1)
-						{
-							nodemap[cy+ty][cx+tx].parent=current;
-							setF(&nodemap[cy+ty][cx+tx],heebo);
+						//Make the current square the parent of this square. . 
+						listAdd(&open, &nodemap[cy+ty][cx+tx]);
+						nodemap[cy+ty][cx+tx].parent=current;
+						nodemap[cy+ty][cx+tx].y=cy+ty;
+						nodemap[cy+ty][cx+tx].x=cx+tx;
+						
+						//Record the F, G, and H costs of the square
+						setF(&nodemap[cy+ty][cx+tx],heebo);
+						atLeatOneFound=1;
 						}
+				else
+				{
+					//If it is on the open list already, check to see if this path to that square is better, using G cost as the measure
+					if(nodemap[cy+ty][cx+tx].G < current->G+1)
+					{
+						//If so, change the parent of the square to the current square, and recalculate the G and F scores of the square
+						nodemap[cy+ty][cx+tx].parent=current;
+						setF(&nodemap[cy+ty][cx+tx],heebo);
 					}
 				}
 			}
 		}
 
+		//Stop when you:
 
+		//Add the target square to the closed list, in which case the path has been found
 		if(current->y==heebo->y && current->x==heebo->x)
 		{
 			break;
 		}
 
-		if(!atLeatOneFound)
-		{
-			break;
-		}
+		//Fail to find the target square, and the open list is empty. In this case, there is no path.    
+		//if(!atLeatOneFound && closed.first==NULL)
+		//{
+			//break;
+		//}
 	}
 	struct node *temp=closed.last;
 	while(1)
 	{
+		//mvprintw(temp->y,temp->x,"x");
 		if(temp->parent->y==t->y && temp->parent->x==t->x)
 		{
-			movet(t,temp->y -t->y,temp->x - t->x ,ls, level);
+			movet(t,temp->y - t->y,temp->x - t->x ,ls,level);
 			break;
 		}
 		temp=temp->parent;
