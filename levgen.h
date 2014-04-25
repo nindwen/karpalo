@@ -7,7 +7,7 @@ struct tile
 	int solid;
 };
 
-int levgen(int size, struct tile level[size][size]);
+int levgen(int size, struct tile level[size][size], int hardness);
 
 #endif
 

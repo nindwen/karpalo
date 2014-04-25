@@ -31,7 +31,8 @@ int thinkt(struct thing *t, int ls, struct tile level[ls][ls], struct thing *hee
 	cx=t->x;
 	cy=t->y;
 
-	struct node *current = &nodemap[t->y][t->x];
+	struct node *current;
+	current = &nodemap[t->y][t->x];
 	listCreat(&open,current);
 
 	current->y=cy;
@@ -44,6 +45,10 @@ int thinkt(struct thing *t, int ls, struct tile level[ls][ls], struct thing *hee
 	{
 		//Look for the lowest F cost square on the open list
 		current=listLowest(&open);	
+		if(current==NULL)
+		{
+			break;
+		}
 		cy=current->y;
 		cx=current->x;
 		
@@ -78,6 +83,7 @@ int thinkt(struct thing *t, int ls, struct tile level[ls][ls], struct thing *hee
 					break;
 			}
 			if(cy+ty<=0 || cx+tx <=0) break;
+			if(cy+ty>=ls || cx+tx >=ls) break;
 			//If it is not walkable or if it is on the closed list, ignore it  
 			if(level[cy+ty][cx+tx].solid==0 && !listIsOn(&closed,&nodemap[cy+ty][cx+tx]))
 			{
@@ -116,20 +122,29 @@ int thinkt(struct thing *t, int ls, struct tile level[ls][ls], struct thing *hee
 		}
 
 		//Fail to find the target square, and the open list is empty. In this case, there is no path.    
-		//if(!atLeatOneFound && closed.first==NULL)
-		//{
-			//break;
-		//}
+		if(!atLeatOneFound && closed.first==NULL)
+		{
+			break;
+		}
 	}
 	struct node *temp=closed.last;
+	int atStart=1;
 	while(1)
 	{
 		//mvprintw(temp->y,temp->x,"x");
+		if(temp->parent->parent != NULL )
+		{
+			if((temp->parent->parent->y==t->y && temp->parent->parent->x==t->x) && atStart)
+			{
+				return 42;
+			}
+		}
 		if(temp->parent->y==t->y && temp->parent->x==t->x)
 		{
 			movet(t,temp->y - t->y,temp->x - t->x ,ls,level);
 			break;
 		}
+		atStart=0;
 		temp=temp->parent;
 	}
 }

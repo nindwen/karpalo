@@ -53,9 +53,19 @@ int listIsOn(struct list *list, struct node *node)
 	
 int listRemove(struct list *list, struct node *node)
 {
-	if(list->first==node)
+	if(list->first==node && list->last==node)
+	{
+		list->first=NULL;
+		list->last=NULL;
+	}
+	else if(list->first==node)
 	{
 		list->first=node->next;
+	}
+	else if(list->last==node)
+	{
+		list->last=node->prev;;
+		node->prev->next=NULL;
 	}
 	else
 	{
@@ -79,6 +89,10 @@ int setF(struct node *node, struct thing *heebo)
 
 struct node* listLowest(struct list *list)
 {
+	if(list->first==NULL)
+	{
+		return NULL;
+	}
 	struct node *cur = list->first;
 	struct node *low=cur;
 	while(1)
